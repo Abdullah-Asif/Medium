@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import { userRoute } from './webApi/routes/userRoute';
-import {Database} from "./infrastructure/dbConfig";
 import dotenv from 'dotenv';
 
 dotenv.config();
