@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      # Keep these in sync with DATABASE_URL in .envrc
+      POSTGRES_DB: asif
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256'
+    container_name: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - asif:/var/lib/postgresql/data
+
+  postgres_test:
+    image: postgres
+    restart: always
+    environment:
+      # Keep these in sync with DATABASE_URL in .envrc
+      POSTGRES_DB: asif_test
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256'
+    container_name: postgres_test
+    ports:
+      - 5433:5432
+    volumes:
+      - asif_test:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  asif:
+  asif_test:
