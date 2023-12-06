@@ -10,8 +10,6 @@ const port = process.env.PORT;
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello, TypeScript Express!');
 });
-
-const database = new Database();
 app.use('/user', userRoute)
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
