@@ -1,5 +1,4 @@
 import { User} from "../../domain/models/user";
-import e from "express";
 class UserRepository {
     constructor() {
     }
