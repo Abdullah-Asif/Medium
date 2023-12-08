@@ -1,4 +1,5 @@
-import {Table, Model, Column, PrimaryKey, DataType, Unique, IsEmail, Validate} from "sequelize-typescript";
+import {Table, Model, Column, PrimaryKey, DataType, Unique, IsEmail, Validate, HasMany} from "sequelize-typescript";
+import {Blog} from "./blog";
 
 @Table({
     tableName: "users",
@@ -36,4 +37,8 @@ export class User extends Model {
     @Column({
         type: DataType.STRING
     })password!: string;
+
+    @HasMany(() => Blog)
+    blogs!: Blog[]
+
 }
