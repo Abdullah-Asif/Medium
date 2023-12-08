@@ -11,6 +11,9 @@ class UserController {
     public async getUserByName(req: Request, res: Response) {
         const {username} = req.params;
         const user = await UserService.getUserByName(username);
+        if (user == null) {
+            return res.status(404).send("User not found");
+        }
         res.status(200).json(user);
     }
     public async createUser(req: Request, res: Response) {
