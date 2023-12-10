@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize-typescript';
 import {Dialect} from "sequelize";
-import {User} from "../domain/models/user";
-import {Blog} from "../domain/models/blog";
+import {User} from "../domain/entities/user";
+import {Blog} from "../domain/entities/blog";
+import {RefreshToken} from "../domain/entities/refreshToken";
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ export class Database {
              username: process.env.DB_USER,
              password: process.env.DB_PASSWORD,
              host: process.env.HOST,
-             models: [User, Blog],
+             models: [User, Blog, RefreshToken],
              dialect: process.env.DB_DIALECT as Dialect
          });
          try {
