@@ -1,11 +1,14 @@
 import BlogRepository from "../../infrastructure/repositories/blogRepository";
-import {Blog} from "../../domain/models/blog";
+import {Blog} from "../../domain/entities/blog";
+import {PaginationQueryRequest} from "../../domain/models/paginationQueryRequest";
 
 class BlogService {
-    constructor() {
+
+    public async getAllBlogsWithPagination(paginationQueryRequest: PaginationQueryRequest) {
+        return await BlogRepository.getAllBlogsWithPagination(paginationQueryRequest);
     }
-    public async  getUsersBlog(username: string) {
-        return await BlogRepository.getUsersBlog(username);
+    public async  getUsersBlogWithPagination(username: string, paginationQueryRequest: PaginationQueryRequest) {
+        return await BlogRepository.getUsersBlogWithPagination(username, paginationQueryRequest);
     }
     public async getBlogById(id: string) {
         return await BlogRepository.getBlogById(id)

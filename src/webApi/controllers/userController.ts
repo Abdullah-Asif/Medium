@@ -1,11 +1,14 @@
 import { Request, Response }  from "express";
-import { User} from "../../domain/models/user";
+import { User} from "../../domain/entities/user";
 import  UserService  from "../../applicaition/services/userService";
+import {createPaginationQueryObject} from "../utils/pageQueryConverter";
+import BlogService from "../../applicaition/services/blogService";
 
 class UserController {
 
     public async getAllUser(req: Request, res: Response) {
-        const user = await UserService.getAllUser();
+        const paginationRequest = createPaginationQueryObject(req, res);
+        const user = await UserService.getAllUser(paginationRequest);
         res.status(200).json(user);
     }
     public async getUserByName(req: Request, res: Response) {
@@ -15,6 +18,12 @@ class UserController {
             return res.status(404).send("User not found");
         }
         res.status(200).json(user);
+    }
+    public async getBlogsByUserName(req: Request, res: Response) {
+        const {username} = req.params;
+        const paginationRequest = createPaginationQueryObject(req, res);
+        const blogs = await BlogService.getUsersBlogWithPagination(username, paginationRequest);
+        res.status(200).json(blogs);
     }
     public async createUser(req: Request, res: Response) {
         try {

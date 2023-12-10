@@ -1,15 +1,17 @@
-import express, { Request, Response }  from "express";
-import {Blog} from "../../domain/models/blog";
+import { Request, Response }  from "express";
+import {Blog} from "../../domain/entities/blog";
 import BlogService from "../../applicaition/services/blogService";
 import { v4 as uuidv4 } from 'uuid';
+import {createPaginationQueryObject} from "../utils/pageQueryConverter";
 
 class BlogController {
 
-    public async getBlogsByUserName(req: Request, res: Response) {
-        const {username} = req.params;
-        const blogs = await BlogService.getUsersBlog(username);
+    public async getAllBlogs(req: Request, res: Response) {
+        const paginationRequest = createPaginationQueryObject(req, res);
+        const blogs = await BlogService.getAllBlogsWithPagination(paginationRequest);
         res.status(200).json(blogs);
     }
+
     public async getBlogById(req: Request, res: Response) {
         const {id} = req.params;
         const blog = await BlogService.getBlogById(id);
@@ -20,7 +22,7 @@ class BlogController {
     }
     public async createBlog(req: Request, res: Response) {
         try {
-            const {username} = req.params;
+            const username = req.user?.username!;
             const blog: Blog= req.body;
             blog.id = uuidv4();
             blog.username = username;

@@ -1,4 +1,5 @@
-import { User} from "../../domain/models/user";
+import { User} from "../../domain/entities/user";
+import {PaginationQueryRequest} from "../../domain/models/paginationQueryRequest";
 class UserRepository {
     constructor() {
     }
@@ -11,8 +12,8 @@ class UserRepository {
         });
     }
 
-    public async getAll() {
-        return await User.findAll();
+    public async getAll(paginationQueryRequest: PaginationQueryRequest) {
+        return await User.findAll({limit:paginationQueryRequest.limit, offset: paginationQueryRequest.offset});
     }
 
     public async getUserByName(username: string) {

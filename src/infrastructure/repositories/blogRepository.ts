@@ -1,4 +1,5 @@
-import {Blog} from "../../domain/models/blog";
+import {Blog} from "../../domain/entities/blog";
+import {PaginationQueryRequest} from "../../domain/models/paginationQueryRequest";
 class BlogRepository {
     constructor() {
     }
@@ -10,8 +11,11 @@ class BlogRepository {
             content: blog.content,
         });
     }
-    public async getUsersBlog(username: string) {
-        return await Blog.findAll({where: {username}});
+    public async getAllBlogsWithPagination(paginationQueryRequest: PaginationQueryRequest) {
+        return await Blog.findAll({limit: paginationQueryRequest.limit, offset: paginationQueryRequest.offset});
+    }
+    public async getUsersBlogWithPagination(username: string, paginationQueryRequest: PaginationQueryRequest) {
+        return await Blog.findAll({limit: paginationQueryRequest.limit, offset: paginationQueryRequest.offset, where: {username}});
     }
     public async getBlogById(id: string) {
         return await Blog.findOne({where: {id}});

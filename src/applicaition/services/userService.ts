@@ -1,11 +1,12 @@
 import UserRepository  from "../../infrastructure/repositories/userRepository";
-import {User} from "../../domain/models/user";
+import {User} from "../../domain/entities/user";
+import {PaginationQueryRequest} from "../../domain/models/paginationQueryRequest";
 
  class UserService {
     constructor() {
     }
-    public async  getAllUser() {
-        return await UserRepository.getAll();
+    public async  getAllUser(paginationQueryRequest: PaginationQueryRequest) {
+        return await UserRepository.getAll(paginationQueryRequest);
     }
     public async getUserByName(userName: string) {
         return await UserRepository.getUserByName(userName)

@@ -1,6 +1,7 @@
 import {Model, Table, PrimaryKey, Column, DataType, Unique, ForeignKey, BelongsTo} from "sequelize-typescript";
 import {User} from "./user";
 import {Col} from "sequelize/types/utils";
+import {DataTypes} from "sequelize";
 
 @Table({
     tableName:  "blogs",
@@ -23,6 +24,8 @@ export class Blog extends Model{
     @Column
     title!: string
 
-    @Column
+    @Column({
+        type: DataType.TEXT
+    })
      content!: string
 }
