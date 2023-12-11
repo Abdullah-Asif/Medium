@@ -4,10 +4,8 @@ import { blogRoute } from "./webApi/routes/blogRoute";
 import { authRoute} from "./webApi/routes/authRoute";
 import dotenv from 'dotenv';
 import {Database} from "./infrastructure/dbConfig";
-import BlogController from "./webApi/controllers/blogController";
 
 dotenv.config();
-
 const app = express();
 app.use(express.json());
 const port = process.env.PORT;
