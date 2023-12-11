@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/body-parser-xml": "^2.0.5",
     "@types/express": "^4.17.21",
+    "@types/jsontoxml": "^1.0.6",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.10.3",
     "@types/uuid": "^9.0.7",
@@ -21,7 +23,12 @@
     "typescript": "^5.3.2"
   },
   "dependencies": {
+    "body-parser-xml": "^2.0.5",
     "dotenv": "^16.3.1",
+    "js2xmlparser": "^5.0.0",
+    "json-to-html": "^0.1.2",
+    "json-to-plain-text": "^1.1.4",
+    "jsontoxml": "^1.0.1",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
     "sequelize": "^6.35.1",

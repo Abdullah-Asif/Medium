@@ -3,13 +3,14 @@ import {Blog} from "../../domain/entities/blog";
 import BlogService from "../../applicaition/services/blogService";
 import { v4 as uuidv4 } from 'uuid';
 import {createPaginationQueryObject} from "../utils/pageQueryConverter";
+import ContentNegotiation from "../utils/contentNegotiation";
 
 class BlogController {
 
     public async getAllBlogs(req: Request, res: Response) {
         const paginationRequest = createPaginationQueryObject(req, res);
         const blogs = await BlogService.getAllBlogsWithPagination(paginationRequest);
-        res.status(200).json(blogs);
+        return ContentNegotiation.sendResponse(req, res, 200, blogs);
     }
 
     public async getBlogById(req: Request, res: Response) {
@@ -18,7 +19,7 @@ class BlogController {
         if (blog == null) {
             return res.status(404).send("Not found")
         }
-        res.status(200).json(blog);
+        return ContentNegotiation.sendResponse(req, res, 200, blog);
     }
     public async createBlog(req: Request, res: Response) {
         try {
@@ -27,7 +28,7 @@ class BlogController {
             blog.id = uuidv4();
             blog.username = username;
             await BlogService.createBlog(blog);
-            res.status(201).send("Blog created successfully");
+            return ContentNegotiation.sendResponse(req, res, 201, "Blog created successfully");
         }
         catch(err: any) {
             res.send(err.message);
@@ -38,7 +39,7 @@ class BlogController {
             const {id} = req.params;
             const content = req.body;
             await BlogService.updateBlog(id, content);
-            res.status(200).send('Blog updated successfully')
+            return ContentNegotiation.sendResponse(req, res, 200, "Blog updated successfully");
         }
         catch (err: any) {
             console.log(err.message);
@@ -48,7 +49,7 @@ class BlogController {
         try {
             const {id} = req.params;
             await BlogService.deleteBlog(id);
-            res.status(200).send("Blog deleted successfully");
+            return ContentNegotiation.sendResponse(req, res, 200, "Blog deleted successfully");
         }
         catch (err: any) {
             console.log(err.message);

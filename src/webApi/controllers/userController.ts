@@ -3,13 +3,15 @@ import { User} from "../../domain/entities/user";
 import  UserService  from "../../applicaition/services/userService";
 import {createPaginationQueryObject} from "../utils/pageQueryConverter";
 import BlogService from "../../applicaition/services/blogService";
+import ContentNegotiation from "../utils/contentNegotiation";
 
 class UserController {
 
     public async getAllUser(req: Request, res: Response) {
         const paginationRequest = createPaginationQueryObject(req, res);
-        const user = await UserService.getAllUser(paginationRequest);
-        res.status(200).json(user);
+        const users = await UserService.getAllUser(paginationRequest);
+        return ContentNegotiation.sendResponse(req, res, 200, users);
+
     }
     public async getUserByName(req: Request, res: Response) {
         const {username} = req.params;
@@ -17,19 +19,19 @@ class UserController {
         if (user == null) {
             return res.status(404).send("User not found");
         }
-        res.status(200).json(user);
+        return ContentNegotiation.sendResponse(req, res, 200, user);
     }
     public async getBlogsByUserName(req: Request, res: Response) {
         const {username} = req.params;
         const paginationRequest = createPaginationQueryObject(req, res);
         const blogs = await BlogService.getUsersBlogWithPagination(username, paginationRequest);
-        res.status(200).json(blogs);
+        return ContentNegotiation.sendResponse(req, res, 200, blogs);
     }
     public async createUser(req: Request, res: Response) {
         try {
             const user: User= req.body;
             await UserService.createUser(user);
-            res.status(201).send("User created successfully");
+            return ContentNegotiation.sendResponse(req, res, 201, "User created successfully");
         }
         catch(err: any) {
             res.send(err.message);
@@ -40,7 +42,7 @@ class UserController {
             const {username} = req.params;
             const user = req.body;
             await UserService.updateUser(username, user);
-            res.status(200).send('User updated successfully')
+            return ContentNegotiation.sendResponse(req, res, 200, "User updated successfully");
         }
         catch (err: any) {
             console.log(err.message);
@@ -50,7 +52,7 @@ class UserController {
         try {
             const {username} = req.params;
             await UserService.deleteUser(username);
-            res.status(200).send("User deleted successfully");
+            return ContentNegotiation.sendResponse(req, res, 200, "User deleted successfully");
         }
         catch (err: any) {
             console.log(err.message);

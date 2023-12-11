@@ -2,8 +2,7 @@ import {Request, Response} from "express";
 import AuthService from "../../applicaition/services/authService";
 import {annotateModelWithIndex} from "sequelize-typescript";
 import { SignInModel} from "../../domain/models/SignInModel";
-import authService from "../../applicaition/services/authService";
-
+import ContentNegotiation from "../utils/contentNegotiation";
 class AuthController {
     public signUp() {
 
@@ -14,7 +13,7 @@ class AuthController {
         if (result == null) {
             return res.status(401).json("Unauthorized");
         }
-        return res.status(200).json(result);
+        return ContentNegotiation.sendResponse(req, res, 200, result);
     }
 
     public async refreshToken(req: Request, res: Response) {
@@ -23,7 +22,7 @@ class AuthController {
         if (tokenEntity == null) {
             return res.status(400).json("Invalid token");
         }
-        return res.status(200).json(tokenEntity);
+        return ContentNegotiation.sendResponse(req, res, 200, tokenEntity);
     }
 }
 export default new AuthController();
