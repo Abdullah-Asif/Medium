@@ -1,7 +1,11 @@
 import jwt, {JwtPayload} from 'jsonwebtoken'
-import {RefreshToken} from "../../domain/entities/refreshToken";
-import {TokenModel} from "../../domain/models/tokenModel";
-import {RefreshTokenModel} from "../../domain/models/refreshTokenModel";
+import {RefreshToken} from "../../domain/models/refreshToken.model";
+import {TokenDTO} from "../../applicaition/dtos/token.dto";
+import {RefreshTokenDTO} from "../../applicaition/dtos/refreshToken.dto";
+import {throws} from "assert";
+import {AuthenticationException} from "../../applicaition/exceptions/authenticationException";
+import {Result} from "../../applicaition/dtos/result";
+import {NotFoundException} from "../../applicaition/exceptions/notFoundException";
 
 class JwtTokenService{
 
@@ -24,55 +28,51 @@ class JwtTokenService{
             return null;
         }
     }
-    public createToken(payload: any): TokenModel {
+    public createToken(payload: any): TokenDTO {
         const username = payload.username;
+        const accessToken = this.createAccessToken(username);
+        const refreshToken = this.createRefreshToken(username);
+        return { accessToken: accessToken, refreshToken: refreshToken };
+    }
+
+    public async RefreshToken(token: RefreshTokenDTO): Promise<string> {
+        const refreshToken = token.refreshToken;
+        const refreshTokenModel = await RefreshToken.findOne({where: {refreshToken}});
+        if (!refreshTokenModel) {
+            throw new AuthenticationException("Invalid refresh token");
+        }
+        const decoded = this.validate(refreshToken,  process.env.SECRET_KEY)
+        if (!decoded || !decoded.username) {
+            throw new AuthenticationException("Invalid refresh token");
+        }
+        const expiryTime = decoded.exp;
+        const currentTime = Math.floor(Date.now() / 1000); // Current time in Unix timestamp format
+        if (expiryTime && currentTime > expiryTime) {
+            await RefreshToken.destroy({where: {refreshToken}});
+            throw new AuthenticationException("Refresh token has expired. Please log in");
+        }
+        const accessToken = this.createAccessToken(decoded.username);
+        return accessToken;
+    }
+    private createAccessToken(username: string): string {
         const accessToken = jwt.sign(
             { username: username },
             process.env.SECRET_KEY as string,
-            { algorithm: this.algorithm, expiresIn: '10m' }
+            { algorithm: this.algorithm, expiresIn: '2 m' }
         );
-        const refreshTokenModel = this.createRefreshToken();
+        return accessToken;
+    }
+
+    private createRefreshToken(username: string): string {
+        const refreshToken = jwt.sign(
+            { username: username },
+            process.env.SECRET_KEY as string,
+            { algorithm: this.algorithm, expiresIn: '5 m' }
+        );
         RefreshToken.create(
-            {refreshToken: refreshTokenModel.refreshToken,
-            expiresAt: refreshTokenModel.expiresAt,
-            valid: refreshTokenModel.valid}
-            );
-       return { accessToken: accessToken, refreshToken: refreshTokenModel.refreshToken };
-    }
-
-    public async RefreshToken(token: TokenModel) {
-        const refreshToken = token.refreshToken;
-        const refreshTokenModel = await RefreshToken.findOne({where: {refreshToken}});
-        if (refreshTokenModel == null) {
-            return null;
-        }
-        if (!refreshTokenModel?.valid) {
-            return null;
-        }
-        if (new Date() > refreshTokenModel.expiresAt) {
-            return null;
-        }
-        refreshTokenModel.valid = false;
-        await RefreshToken.update(refreshTokenModel.dataValues,{where: {refreshToken}});
-        const decodedToken = jwt.decode(token.accessToken);
-        return this.createToken(decodedToken);
-
-    }
-    private createRefreshToken(): RefreshTokenModel {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let token = '';
-        const stringLength = 26;
-
-        for (let i = 0; i < stringLength; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            token += characters.charAt(randomIndex);
-        }
-        const expirationTime = new Date(new Date().getTime() + 30 * 60000);
-        return {
-            refreshToken: token,
-            expiresAt: expirationTime,
-            valid: true
-        };
+            {refreshToken: refreshToken}
+        );
+        return refreshToken;
     }
 }
 

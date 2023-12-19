@@ -3,7 +3,7 @@ import BlogController from "../controllers/blogController";
 import AuthMiddleware from "../middlewares/authMiddleware";
 const blogRoute = Router();
 
-blogRoute.get('/', AuthMiddleware.verify, BlogController.getAllBlogs);
+blogRoute.get('/', AuthMiddleware.verify, BlogController.getAllBlogsWithPagination);
 blogRoute.get('/:id', AuthMiddleware.verify, BlogController.getBlogById);
 blogRoute.post('/',AuthMiddleware.verify, BlogController.createBlog);
 blogRoute.put('/:id', AuthMiddleware.verify, BlogController.updateBlog);

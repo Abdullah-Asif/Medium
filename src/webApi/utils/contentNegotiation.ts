@@ -16,7 +16,6 @@ class ContentNegotiation{
     public sendTextResponse(req: Request, res: Response, status: number, data: any) {
         res.setHeader("Content-type","text/plain");
         const plainText = jsonToPlainText(data, {});
-        // const jsonData = JSON.stringify(data, null, 2);
         return res.status(status).send(plainText);
 
     }

@@ -1,7 +1,8 @@
 import {NextFunction, Request, Response} from "express";
 import JwtTokenService from "../../infrastructure/Identity/jwtTokenService";
-import {User} from "../../domain/entities/user";
+import {User} from "../../domain/models/user.model";
 import exp from "constants";
+import {UserDto} from "../../applicaition/dtos/user.dto";
 class AuthMiddleware{
     public verify(req: Request, res: Response, next: NextFunction) {
         const authHeaderValue = req.headers.authorization || req.headers.Authorization;
@@ -16,7 +17,10 @@ class AuthMiddleware{
         }
         const decoded = JwtTokenService.validate(accessToken, process.env.SECRET_KEY);
         if (decoded) {
-            req.user  = decoded.user;
+            if (!req.user) {
+                req.user = new UserDto();
+            }
+            req.user.username = decoded.username;
             next();
         }
         else {
@@ -29,7 +33,7 @@ export default new AuthMiddleware()
 declare global {
     namespace Express {
         interface Request {
-            user?: User; // Define your custom property here
+            user: UserDto; // Define your custom property here
         }
     }
 }

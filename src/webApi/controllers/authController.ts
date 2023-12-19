@@ -1,28 +1,40 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import AuthService from "../../applicaition/services/authService";
-import {annotateModelWithIndex} from "sequelize-typescript";
-import { SignInModel} from "../../domain/models/SignInModel";
+import { SignInDTO} from "../../applicaition/dtos/signIn.dto";
 import ContentNegotiation from "../utils/contentNegotiation";
-class AuthController {
-    public signUp() {
+import {SignUpDto} from "../../applicaition/dtos/signUp.dto";
 
-    }
-    public async signIn(req: Request, res: Response) {
-        const user: SignInModel = req.body
-        const result = await AuthService.signIn(user);
-        if (result == null) {
-            return res.status(401).json("Unauthorized");
+class AuthController{
+    public async signUp(req: Request, res: Response, next: NextFunction) {
+        try {
+            const signUpDto: SignUpDto = req.body
+            const result = await AuthService.signUp(signUpDto);
+            return ContentNegotiation.sendResponse(req, res, 201, result.value);
         }
-        return ContentNegotiation.sendResponse(req, res, 200, result);
+        catch (err: any) {
+            next(err);
+        }
+    }
+    public async signIn(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user: SignInDTO = req.body
+            const result = await AuthService.signIn(user);
+            return ContentNegotiation.sendResponse(req, res, 200, result.value);
+        }
+        catch (err: any) {
+            next(err);
+        }
     }
 
-    public async refreshToken(req: Request, res: Response) {
-        const tokenModel = req.body;
-        const tokenEntity = await AuthService.RefreshToken(tokenModel);
-        if (tokenEntity == null) {
-            return res.status(400).json("Invalid token");
+    public async refreshToken(req: Request, res: Response, next: NextFunction) {
+        try {
+            const tokenModel = req.body;
+            const result = await AuthService.RefreshToken(tokenModel);
+            return ContentNegotiation.sendResponse(req, res, 200, result.value);
         }
-        return ContentNegotiation.sendResponse(req, res, 200, tokenEntity);
+        catch (err: any) {
+            next(err);
+        }
     }
 }
 export default new AuthController();

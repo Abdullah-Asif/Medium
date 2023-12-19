@@ -1,4 +1,5 @@
 import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {AutoMap} from "@automapper/classes";
 @Table({
     tableName: 'tokens'
 })
@@ -8,9 +9,4 @@ export class RefreshToken extends Model {
     @Column
     refreshToken!: string
 
-    @Column
-    expiresAt!: Date;
-
-    @Column
-    valid!: boolean
 }

@@ -1,5 +1,16 @@
-import {Table, Model, Column, PrimaryKey, DataType, Unique, IsEmail, Validate, HasMany} from "sequelize-typescript";
-import {Blog} from "./blog";
+import {
+    Table,
+    Model,
+    Column,
+    PrimaryKey,
+    DataType,
+    Unique,
+    IsEmail,
+    Validate,
+    HasMany,
+    BeforeFind
+} from "sequelize-typescript";
+import {Blog} from "./blog.model";
 
 @Table({
     tableName: "users",
