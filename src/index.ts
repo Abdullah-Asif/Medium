@@ -6,25 +6,22 @@ import dotenv from 'dotenv';
 import {Database} from "./infrastructure/dbConfig";
 import {User} from "./domain/models/user.model";
 import {UserDto} from "./applicaition/dtos/user.dto";
-import {globalExceptionMiddleware} from "./webApi/middlewares/globalExceptionMiddleware";
+import {globalExceptionMiddleware} from "./webApi/middlewares/globalExceptionMiddleware"
+import cors from 'cors';
 
 
 dotenv.config();
 
 const app = express();
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
+const options: cors.CorsOptions = {
+    origin: allowedOrigins
+};
+app.use(cors(options));
 app.use(express.json());
+
 const port = process.env.PORT;
 const database = new Database();
-const user = new UserDto();
-
-//
-// console.log('------------------------')
-// const sourceObj:UserDto = {username: "asif",
-//     name: "Asif",
-//     email: "as@gmail.com"
-// }
-// const destinationObj = mapObjects<UserDto, User>(sourceObj, User);
-// console.log(destinationObj.dataValues);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello Pants!!!!');
