@@ -24,7 +24,7 @@ class UserRepository {
     }
 
     public async update(username: string, user: Partial<User>): Promise<void> {
-        await User.update(user, {where: {username}});
+        await User.update(user, {where: {username: username}});
     }
 
     public async delete(username: string): Promise<void> {

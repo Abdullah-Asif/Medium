@@ -1,6 +1,6 @@
 export class PaginationQueryRequest {
     private _limit: number = 5;
-    private _offset: number = 0;
+    private _offset: number = 1;
     private _maxLimit: number = 50;
 
     constructor(limit?: number, offset?: number) {
@@ -26,7 +26,7 @@ export class PaginationQueryRequest {
     }
 
     public set offset(value: number) {
-        this._offset = Math.max(0, value);
+        this._offset = Math.max(1, value);
     }
 
     public get maxLimit(): number {

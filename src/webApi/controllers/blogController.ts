@@ -28,6 +28,27 @@ class BlogController {
             next(err);
         }
     }
+
+    public async downloadBlog(req: Request, res: Response, next: NextFunction) {
+        try {
+            const {id} = req.params;
+            const result = await BlogService.downloadBlogAsPDF(id);
+            return res.status(200).send(result);
+        }
+        catch (err: any) {
+            next(err);
+        }
+    }
+
+    public async getTotalBlogsCount(req: Request, res: Response, next: NextFunction) {
+        try {
+            const result = await BlogService.getTotalBlogsCount();
+            return ContentNegotiation.sendResponse(req, res, 200, result.value);
+        }
+        catch (err: any) {
+            next(err);
+        }
+    }
     public async createBlog(req: Request, res: Response, next: NextFunction) {
         try {
             const username = req.user.username!;

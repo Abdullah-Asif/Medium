@@ -33,7 +33,7 @@ import {AuthorizationException} from "../exceptions/authorizationException";
         if (!user) {
             throw new NotFoundException("User not found");
         }
-        if (userDto.username != currentUserName) {
+        if (user.username != currentUserName) {
             throw new AuthorizationException()
         }
         const userModel = Mapper.map(userDto, User);

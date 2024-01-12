@@ -58,7 +58,7 @@ class JwtTokenService{
         const accessToken = jwt.sign(
             { username: username },
             process.env.SECRET_KEY as string,
-            { algorithm: this.algorithm, expiresIn: '2 m' }
+            { algorithm: this.algorithm, expiresIn: '1 h' }
         );
         return accessToken;
     }
@@ -67,7 +67,7 @@ class JwtTokenService{
         const refreshToken = jwt.sign(
             { username: username },
             process.env.SECRET_KEY as string,
-            { algorithm: this.algorithm, expiresIn: '5 m' }
+            { algorithm: this.algorithm, expiresIn: '1 d' }
         );
         RefreshToken.create(
             {refreshToken: refreshToken}

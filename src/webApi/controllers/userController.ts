@@ -54,18 +54,19 @@ class UserController {
             const currentUserName = req.user.username;
             const user:UserDto = req.body;
             await UserService.updateUser(username, user, currentUserName);
-            return ContentNegotiation.sendResponse(req, res, 200, "User updated successfully");
+            return ContentNegotiation.sendResponse(req, res, 204, "User updated successfully");
         }
         catch (err: any) {
             next(err);
         }
     }
+
     public async deleteUserByUserName(req: Request, res: Response, next: NextFunction) {
         try {
             const {username} = req.params;
             const currentUserName = req.user.username;
             await UserService.deleteUser(username, currentUserName);
-            return ContentNegotiation.sendResponse(req, res, 200, "User deleted successfully");
+            return ContentNegotiation.sendResponse(req, res, 204, "User deleted successfully");
         }
         catch (err: any) {
             next(err);
