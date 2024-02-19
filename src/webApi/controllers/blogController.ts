@@ -55,8 +55,8 @@ class BlogController {
             const blog: BlogDto= req.body;
             blog.id = uuidv4();
             blog.username = username;
-            await BlogService.createBlog(blog);
-            return ContentNegotiation.sendResponse(req, res, 201, "Blog created successfully");
+            const result = await BlogService.createBlog(blog);
+            return ContentNegotiation.sendResponse(req, res, 201, result.value);
         }
         catch (err: any){
             next(err);

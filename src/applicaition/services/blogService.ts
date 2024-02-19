@@ -32,9 +32,10 @@ class BlogService {
         return Result.success<number>(totalcount);
     }
 
-    public async createBlog(blogDto: BlogDto): Promise<void> {
+    public async createBlog(blogDto: BlogDto): Promise<Result<BlogDto>> {
         const blog = Mapper.map(blogDto, Blog);
-        await BlogRepository.create(blog);
+        const createdBlog = await BlogRepository.create(blog);
+        return Result.success<BlogDto>(Mapper.map(createdBlog.dataValues, BlogDto));
     }
     public async updateBlog(id: string, blogDto: BlogDto, currentUserName: string): Promise<void> {
         const blogModel = await this.getBlogById(id);

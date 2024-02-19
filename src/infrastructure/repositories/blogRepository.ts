@@ -4,13 +4,14 @@ import {DatabaseAccessException} from "../../applicaition/exceptions/databaseAcc
 class BlogRepository {
     constructor() {
     }
-    public async create(blog: Blog): Promise<void> {
-        await Blog.create({
+    public async create(blog: Blog): Promise<Blog> {
+        const res = await Blog.create({
             id: blog.id,
             username: blog.username,
             title: blog.title,
             content: blog.content
         });
+        return res;
 
     }
     public async getAllBlogsWithPagination(paginationQueryRequest: PaginationQueryRequest): Promise<Blog[]> {
