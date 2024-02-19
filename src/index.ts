@@ -4,8 +4,6 @@ import { blogRoute } from "./webApi/routes/blogRoute";
 import { authRoute} from "./webApi/routes/authRoute";
 import dotenv from 'dotenv';
 import {Database} from "./infrastructure/dbConfig";
-import {User} from "./domain/models/user.model";
-import {UserDto} from "./applicaition/dtos/user.dto";
 import {globalExceptionMiddleware} from "./webApi/middlewares/globalExceptionMiddleware"
 import cors from 'cors';
 
