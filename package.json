@@ -6,8 +6,8 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
+    "test": "jest",
     "serve": "node dist/index.js",
-    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -46,6 +46,7 @@
     "jsontoxml": "^1.0.1",
     "jsonwebtoken": "^9.0.2",
     "node-mocks-http": "^1.14.0",
+    "nodemon": "^3.0.2",
     "pdfkit": "^0.14.0",
     "reflect-metadata": "^0.1.14",
     "sequelize": "^6.35.1",
